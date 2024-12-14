@@ -218,8 +218,7 @@ public class NhanVienDao {
             KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
             PublicKey publicKey = keyPair.getPublic();
             PrivateKey privateKey = keyPair.getPrivate();
-            byte[] encryptedPhoneBytes = EncryptionHelperDao.encryptRSA(Goc.txt_SoDT.getText(), publicKey);
-            String encryptedPhone = new String(encryptedPhoneBytes);
+            String encryptedPhone = EncryptionHelperDao.encryptRSA(Goc.txt_SoDT.getText(), publicKey);
             // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
             PreparedStatement preparedStatement = Connect.conn.prepareStatement(
                     "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
