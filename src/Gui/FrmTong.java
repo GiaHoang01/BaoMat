@@ -58,13 +58,14 @@ public class FrmTong extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         close = new javax.swing.JLabel();
-        lb_TrangChu = new javax.swing.JLabel();
+        lb_LichSu = new javax.swing.JLabel();
         lb_DangXuat = new javax.swing.JLabel();
         lb_HoaDon = new javax.swing.JLabel();
         lb_datPhong = new javax.swing.JLabel();
         lb_Phong = new javax.swing.JLabel();
         lb_KhachHang = new javax.swing.JLabel();
         txt_NhanVien = new javax.swing.JLabel();
+        lb_TrangChu = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         Menu_Thongtin = new javax.swing.JLabel();
         Menu = new javax.swing.JLabel();
@@ -107,17 +108,17 @@ public class FrmTong extends javax.swing.JFrame {
 
         pnMenu.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 300, 100));
 
-        lb_TrangChu.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        lb_TrangChu.setForeground(new java.awt.Color(255, 255, 255));
-        lb_TrangChu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lb_TrangChu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Anh/icons8-home-50.png"))); // NOI18N
-        lb_TrangChu.setText("Trang Chủ");
-        lb_TrangChu.addMouseListener(new java.awt.event.MouseAdapter() {
+        lb_LichSu.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lb_LichSu.setForeground(new java.awt.Color(255, 255, 255));
+        lb_LichSu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lb_LichSu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Anh/icons8-history-48.png"))); // NOI18N
+        lb_LichSu.setText("Lịch sử");
+        lb_LichSu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lb_TrangChuMouseClicked(evt);
+                lb_LichSuMouseClicked(evt);
             }
         });
-        pnMenu.add(lb_TrangChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 320, 80));
+        pnMenu.add(lb_LichSu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 610, 320, 80));
 
         lb_DangXuat.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lb_DangXuat.setForeground(new java.awt.Color(255, 255, 255));
@@ -189,6 +190,18 @@ public class FrmTong extends javax.swing.JFrame {
             }
         });
         pnMenu.add(txt_NhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 530, 360, 70));
+
+        lb_TrangChu.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lb_TrangChu.setForeground(new java.awt.Color(255, 255, 255));
+        lb_TrangChu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lb_TrangChu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Anh/icons8-home-50.png"))); // NOI18N
+        lb_TrangChu.setText("Trang Chủ");
+        lb_TrangChu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_TrangChuMouseClicked(evt);
+            }
+        });
+        pnMenu.add(lb_TrangChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 320, 80));
 
         getContentPane().add(pnMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 0, 770));
 
@@ -365,6 +378,22 @@ public class FrmTong extends javax.swing.JFrame {
         panel_GiaoDien.revalidate();
         panel_GiaoDien.repaint();
     }//GEN-LAST:event_lb_datPhongMouseClicked
+    
+    private void lb_LichSuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_LichSuMouseClicked
+        // TODO add your handling code here:
+        JPanel newPanel = new FrmNhatKyGiaiTrinh();
+
+        // Loại bỏ tất cả các thành phần con của panel_GiaoDien
+        panel_GiaoDien.removeAll();
+
+        // Thêm formPhong vào panel_GiaoDien
+        panel_GiaoDien.setLayout(new BorderLayout()); // Đảm bảo bố cục hợp lý
+        panel_GiaoDien.add(newPanel, BorderLayout.CENTER);
+
+        // Cập nhật giao diện người dùng
+        panel_GiaoDien.revalidate();
+        panel_GiaoDien.repaint();
+    }//GEN-LAST:event_lb_LichSuMouseClicked
 
     private void lb_TrangChuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_TrangChuMouseClicked
         // TODO add your handling code here:
@@ -472,6 +501,7 @@ public class FrmTong extends javax.swing.JFrame {
     private javax.swing.JLabel lb_DangXuat;
     private javax.swing.JLabel lb_HoaDon;
     private javax.swing.JLabel lb_KhachHang;
+    private javax.swing.JLabel lb_LichSu;
     private javax.swing.JLabel lb_Phong;
     private javax.swing.JLabel lb_TrangChu;
     private javax.swing.JLabel lb_datPhong;
