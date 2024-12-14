@@ -20,6 +20,7 @@ import java.util.Base64;
  * @author HUU KHANH
  */
 public class KhachHangDao {
+
     private static PublicKey publicKey;
     private static PrivateKey privateKey;
 
@@ -33,6 +34,7 @@ public class KhachHangDao {
             e.printStackTrace();
         }
     }
+
     public int SearchMaKhachHang(String tenKhachHang) {
         String sql = "Select Admin.KhachHang.MaKhachHang from Admin.KhachHang where MaKhachHang=?";
         Connect helper = null;
@@ -171,42 +173,40 @@ public class KhachHangDao {
 
     public static boolean maHoaKhachHang(KhachHang kh) {
         try {
-            String sql = "UPDATE Admin.KHACHHANG SET SoCMND = ?, TenKH = ?, SDT = ?, GioiTinh = ? where MaKH=?";
+            String sql = "UPDATE Admin.KHACHHANG SET SoCMND = ?, TenKH = ?, SDT = ?, GioiTinh = ? WHERE MaKH = ?";
             Connect helper = new Connect();
             helper.Connect();
             PreparedStatement statement = helper.conn.prepareStatement(sql);
-            byte[] encryptedCMNDBytes = EncryptionHelperDao.encryptRSA(kh.getSoCMND(), publicKey);
-            String encryptedCMND = new String(encryptedCMNDBytes);
-            statement.setString(1, encryptedCMND);
-            statement.setString(2, kh.getTenKH());
-            statement.setString(3, EncryptionHelperDao.encrypt(kh.getSDT()));
-            statement.setString(4, kh.getGioiTinh());
-            statement.setInt(5, kh.getMaKH());
-            int result = statement.executeUpdate();
-            return result > 0;
+
+            // Mã hóa SoCMND và trả về chuỗi Base64
+            String encryptedCMND = EncryptionHelperDao.encryptRSA(kh.getSoCMND(), publicKey);
+
+            // Mã hóa các trường khác nếu cần
+            statement.setString(1, encryptedCMND); // SoCMND đã mã hóa
+            statement.setString(2, kh.getTenKH()); // Tên khách hàng
+            statement.setString(3, EncryptionHelperDao.encrypt(kh.getSDT())); // Mã hóa SDT
+            statement.setString(4, kh.getGioiTinh()); // Giới tính
+            statement.setInt(5, kh.getMaKH()); // Mã khách hàng
+
+            int result = statement.executeUpdate(); // Thực thi câu lệnh SQL
+            return result > 0; // Kiểm tra kết quả
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage()); // In lỗi nếu có
             return false;
         }
     }
 
     public static boolean giaiMaKhachHang(KhachHang kh) {
         try {
-            String sql = "UPDATE Admin.KHACHHANG SET SoCMND = ?, TenKH = ?, SDT = ?, GioiTinh = ? where MaKH=?";
+            String sql = "UPDATE Admin.KHACHHANG SET SoCMND = ?, TenKH = ?, SDT = ?, GioiTinh = ? WHERE MaKH = ?";
             Connect helper = new Connect();
             helper.Connect();
             PreparedStatement statement = helper.conn.prepareStatement(sql);
 
-            // Giải mã Base64 từ SoCMND
-            byte[] encryptedCMND = Base64.getDecoder().decode(kh.getSoCMND()); // Giải mã Base64 thành byte[]
+            // Giải mã SoCMND từ chuỗi Base64
+            String decryptedCMND = EncryptionHelperDao.decryptRSA(kh.getSoCMND(), privateKey);
 
-            // Giải mã RSA và nhận về mảng byte
-            byte[] decryptedCMNDBytes = EncryptionHelperDao.decryptRSA(encryptedCMND, privateKey); // Giải mã RSA
-
-            // Chuyển byte[] thành chuỗi (sử dụng UTF-8 nếu dữ liệu đã được mã hóa như vậy)
-            String decryptedCMND = new String(decryptedCMNDBytes, "UTF-8");
-
-            // Cập nhật dữ liệu vào PreparedStatement
+            // Giải mã các trường khác nếu cần
             statement.setString(1, decryptedCMND); // SoCMND đã được giải mã
             statement.setString(2, kh.getTenKH()); // Tên khách hàng
             statement.setString(3, EncryptionHelperDao.decrypt(kh.getSDT())); // Giải mã SDT

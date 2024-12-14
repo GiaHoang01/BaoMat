@@ -9,6 +9,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 import javax.crypto.Cipher;
 
 /**
@@ -16,6 +17,7 @@ import javax.crypto.Cipher;
  * @author HUU KHANH
  */
 public class EncryptionHelperDao {
+
     private static final int SHIFT = 3; // Số bước dịch chuyển
     private static final int DIGIT_SHIFT = 5; // Dịch chuyển riêng cho số
 
@@ -48,19 +50,22 @@ public class EncryptionHelperDao {
         }
         return decrypted.toString();
     }
-     // Mã hóa RSA
-    public static byte[] encryptRSA(String data, PublicKey publicKey) throws Exception {
+    // Mã hóa RSA
+
+    public static String encryptRSA(String data, PublicKey publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return cipher.doFinal(data.getBytes());
+        byte[] encryptedBytes = cipher.doFinal(data.getBytes()); // Mã hóa dữ liệu thành byte[]
+        return Base64.getEncoder().encodeToString(encryptedBytes); // Chuyển đổi byte[] sang Base64
     }
 
-   public static byte[] decryptRSA(byte[] data, PrivateKey privateKey) throws Exception {
-    Cipher cipher = Cipher.getInstance("RSA");
-    cipher.init(Cipher.DECRYPT_MODE, privateKey);
-    return cipher.doFinal(data);  // Trả về byte[] thay vì String
-}
-
+    public static String decryptRSA(String encryptedData, PrivateKey privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] encryptedBytes = Base64.getDecoder().decode(encryptedData); // Chuyển Base64 về byte[]
+        byte[] decryptedBytes = cipher.doFinal(encryptedBytes); // Giải mã byte[]
+        return new String(decryptedBytes); // Chuyển byte[] thành String
+    }
 
     // Hàm tạo cặp khóa RSA
     public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException {
