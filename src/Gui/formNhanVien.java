@@ -148,6 +148,8 @@ public class formNhanVien extends javax.swing.JPanel {
         txt_img = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btn_DoiAnh = new javax.swing.JButton();
+        btn_encrypt = new javax.swing.JButton();
+        btn_decrypt = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1370, 670));
@@ -317,6 +319,22 @@ public class formNhanVien extends javax.swing.JPanel {
             }
         });
         add(btn_DoiAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 220, -1, -1));
+
+        btn_encrypt.setText("Mã hóa");
+        btn_encrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_encryptActionPerformed(evt);
+            }
+        });
+        add(btn_encrypt, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 310, 100, 30));
+
+        btn_decrypt.setText("Giải mã");
+        btn_decrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_decryptActionPerformed(evt);
+            }
+        });
+        add(btn_decrypt, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 310, 100, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void tb_NhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_NhanVienMouseClicked
@@ -443,6 +461,16 @@ public class formNhanVien extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_DoiAnhActionPerformed
 
+    private void btn_encryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_encryptActionPerformed
+        // TODO add your handling code here:
+        NhanVienEvent.maHoaNhanVien();
+    }//GEN-LAST:event_btn_encryptActionPerformed
+
+    private void btn_decryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_decryptActionPerformed
+        // TODO add your handling code here:
+        NhanVienEvent.giaiMaNhanVien();
+    }//GEN-LAST:event_btn_decryptActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_DoiAnh;
@@ -450,6 +478,8 @@ public class formNhanVien extends javax.swing.JPanel {
     public javax.swing.JButton btn_Them;
     public javax.swing.JButton btn_Tim;
     public javax.swing.JButton btn_Xoa;
+    private javax.swing.JButton btn_decrypt;
+    private javax.swing.JButton btn_encrypt;
     private javax.swing.ButtonGroup group_GioiTinh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

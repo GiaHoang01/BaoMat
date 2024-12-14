@@ -10,6 +10,9 @@ import Pojo.Connect;
 import Pojo.NhanVien;
 import java.io.File;
 import java.io.FileInputStream;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -203,7 +206,85 @@ public class NhanVienDao {
             JOptionPane.showConfirmDialog(null, ex);
         }
     }
+    public void maHoaNhanVien() {
+        Connect.Connect();
+        try {
+            // Sử dụng đường dẫn ảnh được lưu trữ nếu nó không phải là null
+            String imagePath = Goc.selectedImagePath;
+            String fileName = "";
+            if (imagePath != null) {
+                fileName = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
+            }
+            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
+            PublicKey publicKey = keyPair.getPublic();
+            PrivateKey privateKey = keyPair.getPrivate();
+            byte[] encryptedPhoneBytes = EncryptionHelperDao.encryptRSA(Goc.txt_SoDT.getText(), publicKey);
+            String encryptedPhone = new String(encryptedPhoneBytes);
+            // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
+            PreparedStatement preparedStatement = Connect.conn.prepareStatement(
+                    "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
+            );
+            preparedStatement.setString(1, Goc.txt_TenNhanVien.getText());
+            preparedStatement.setString(2, Goc.txt_ChucVu.getText());
+            preparedStatement.setString(3, encryptedPhone);
 
+            String sex = Goc.rdo_Nam.isSelected() ? "Nam" : "Nữ";
+            preparedStatement.setString(4, sex);
+            preparedStatement.setString(5, Goc.txt_TenDangNhap.getText());
+            preparedStatement.setString(6, Goc.txt_NgaySinh.getText());
+            preparedStatement.setString(7, fileName); // Đặt tên tệp hình ảnh vào đây
+            preparedStatement.setString(8, Goc.txt_MaNhanVien.getText());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Sửa Thành công");
+                Goc.initNhanVien();
+                Goc.initTable();
+            } else {
+                JOptionPane.showMessageDialog(null, "Sửa Thất Bại");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showConfirmDialog(null, ex);
+        }
+    }
+
+    public void giaiMaNhanVien() {
+        Connect.Connect();
+        try {
+            // Sử dụng đường dẫn ảnh được lưu trữ nếu nó không phải là null
+            String imagePath = Goc.selectedImagePath;
+            String fileName = "";
+            if (imagePath != null) {
+                fileName = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
+            }
+
+            // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
+            PreparedStatement preparedStatement = Connect.conn.prepareStatement(
+                    "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
+            );
+            preparedStatement.setString(1, Goc.txt_TenNhanVien.getText());
+            preparedStatement.setString(2, Goc.txt_ChucVu.getText());
+            preparedStatement.setString(3, Goc.txt_SoDT.getText());
+
+            String sex = Goc.rdo_Nam.isSelected() ? "Nam" : "Nữ";
+            preparedStatement.setString(4, sex);
+            preparedStatement.setString(5, Goc.txt_TenDangNhap.getText());
+            preparedStatement.setString(6, Goc.txt_NgaySinh.getText());
+            preparedStatement.setString(7, fileName); // Đặt tên tệp hình ảnh vào đây
+            preparedStatement.setString(8, Goc.txt_MaNhanVien.getText());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Sửa Thành công");
+                Goc.initNhanVien();
+                Goc.initTable();
+            } else {
+                JOptionPane.showMessageDialog(null, "Sửa Thất Bại");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showConfirmDialog(null, ex);
+        }
+    }
     public static ArrayList<String> layDSNhanVien() 
     {
         ArrayList<String> dsNhanVien = new ArrayList();
