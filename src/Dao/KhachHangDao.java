@@ -184,7 +184,7 @@ public class KhachHangDao {
             // Mã hóa các trường khác nếu cần
             statement.setString(1, encryptedCMND); // SoCMND đã mã hóa
             statement.setString(2, kh.getTenKH()); // Tên khách hàng
-            statement.setString(3, EncryptionHelperDao.encrypt(kh.getSDT())); // Mã hóa SDT
+            statement.setString(3, EncryptionHelperDao.encrypt(kh.getSDT(), publicKey)); // Mã hóa SDT
             statement.setString(4, kh.getGioiTinh()); // Giới tính
             statement.setInt(5, kh.getMaKH()); // Mã khách hàng
 

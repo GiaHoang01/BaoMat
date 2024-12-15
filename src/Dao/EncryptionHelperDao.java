@@ -21,7 +21,7 @@ public class EncryptionHelperDao {
     private static final int SHIFT = 3; // Số bước dịch chuyển
     private static final int DIGIT_SHIFT = 5; // Dịch chuyển riêng cho số
 
-    public static String encrypt(String input) {
+    public static String encrypt(String input, PublicKey publicKey) {
         StringBuilder encrypted = new StringBuilder();
         for (char c : input.toCharArray()) {
             if (Character.isDigit(c)) {

@@ -5,7 +5,11 @@
 package Gui;
 
 import Dao.DangKyDao;
+import Dao.EncryptionHelperDao;
 import Pojo.Connect;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,6 +18,20 @@ import javax.swing.JOptionPane;
  */
 public class DangKy extends javax.swing.JFrame {
 
+     
+    private static PublicKey publicKey;
+    private static PrivateKey privateKey;
+
+    static {
+        try {
+            // Tạo cặp khóa RSA khi khởi tạo class (khởi tạo một lần)
+            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
+            publicKey = keyPair.getPublic();
+            privateKey = keyPair.getPrivate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Creates new form DangKy
      */
