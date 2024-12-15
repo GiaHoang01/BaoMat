@@ -33,7 +33,19 @@ import javax.swing.table.DefaultTableModel;
  * @author 84862
  */
 public class NhanVienDao {
+ private static PublicKey publicKey;
+    private static PrivateKey privateKey;
 
+    static {
+        try {
+            // Tạo cặp khóa RSA khi khởi tạo class (khởi tạo một lần)
+            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
+            publicKey = keyPair.getPublic();
+            privateKey = keyPair.getPrivate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public NhanVienDao() {
     }
 
@@ -230,9 +242,6 @@ public class NhanVienDao {
             if (imagePath != null) {
                 fileName = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
             }
-            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-            PrivateKey privateKey = keyPair.getPrivate();
             String encryptedPhone = EncryptionHelperDao.encryptRSA(Goc.txt_SoDT.getText(), publicKey);
             // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
             String ngaySinhText = Goc.txt_NgaySinh.getText();
@@ -305,7 +314,7 @@ public class NhanVienDao {
             );
             preparedStatement.setString(1, Goc.txt_TenNhanVien.getText());
             preparedStatement.setString(2, Goc.txt_ChucVu.getText());
-            preparedStatement.setString(3, Goc.txt_SoDT.getText());
+            preparedStatement.setString(3, EncryptionHelperDao.decryptRSA(Goc.txt_SoDT.getText(), privateKey));
 
             String sex = Goc.rdo_Nam.isSelected() ? "Nam" : "Nữ";
             preparedStatement.setString(4, sex);
