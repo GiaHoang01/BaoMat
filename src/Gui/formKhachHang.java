@@ -5,6 +5,10 @@
 package Gui;
 
 import Dao.KhachHangDao;
+import Pojo.Connect;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.CallableStatement;
 import Pojo.KhachHang;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -13,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import java.sql.PreparedStatement;
 /**
  *
  * @author HUU KHANH
@@ -63,6 +67,9 @@ public class formKhachHang extends javax.swing.JPanel {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        btnGroup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_KhachHang = new javax.swing.JTable();
@@ -84,14 +91,20 @@ public class formKhachHang extends javax.swing.JPanel {
         rdo_Nu = new javax.swing.JRadioButton();
         rdo_Nam = new javax.swing.JRadioButton();
         btn_LamMoi = new javax.swing.JButton();
+        nb_key = new javax.swing.JSpinner();
         btn_Encrypt = new javax.swing.JButton();
         btn_Decrypt = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        rdo_GiaoDien = new javax.swing.JRadioButton();
+        rdo_Ham = new javax.swing.JRadioButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 0, 0));
         jLabel1.setText("Khách hàng");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 8, -1, -1));
 
         tbl_KhachHang.setForeground(new java.awt.Color(153, 0, 0));
         tbl_KhachHang.setModel(new javax.swing.table.DefaultTableModel(
@@ -124,47 +137,59 @@ public class formKhachHang extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tbl_KhachHang);
 
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 305, 1421, 392));
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(153, 0, 0));
         jLabel2.setText("Mã khách hàng :");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 84, -1, -1));
 
         txt_MaKhachHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_MaKhachHangActionPerformed(evt);
             }
         });
+        add(txt_MaKhachHang, new org.netbeans.lib.awtextra.AbsoluteConstraints(353, 82, 350, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(153, 0, 0));
         jLabel3.setText("Tên khách hàng :");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 130, -1, -1));
 
         txt_CMND.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_CMNDActionPerformed(evt);
             }
         });
+        add(txt_CMND, new org.netbeans.lib.awtextra.AbsoluteConstraints(353, 172, 350, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(153, 0, 0));
-        jLabel4.setText("Số CMND:");
+        jLabel4.setText("Key:");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 93, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(153, 0, 0));
         jLabel5.setText("Số điện thoại :");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(758, 84, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(153, 0, 0));
         jLabel6.setText("Giới tính :");
+        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(758, 125, -1, -1));
+        add(txt_TenKhachHang, new org.netbeans.lib.awtextra.AbsoluteConstraints(353, 130, 350, 30));
 
         txt_SoDT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_SoDTActionPerformed(evt);
             }
         });
+        add(txt_SoDT, new org.netbeans.lib.awtextra.AbsoluteConstraints(907, 82, 368, 30));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(153, 0, 0));
         jLabel9.setText("Tìm Kiếm :");
+        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(758, 166, -1, -1));
 
         btn_Them.setBackground(new java.awt.Color(0, 255, 51));
         btn_Them.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -176,6 +201,7 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_ThemActionPerformed(evt);
             }
         });
+        add(btn_Them, new org.netbeans.lib.awtextra.AbsoluteConstraints(907, 208, -1, 40));
 
         btn_Xoa.setBackground(new java.awt.Color(255, 0, 0));
         btn_Xoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -187,6 +213,7 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_XoaActionPerformed(evt);
             }
         });
+        add(btn_Xoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(1034, 208, 100, 40));
 
         btn_Sua.setBackground(new java.awt.Color(0, 51, 255));
         btn_Sua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -198,6 +225,7 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_SuaActionPerformed(evt);
             }
         });
+        add(btn_Sua, new org.netbeans.lib.awtextra.AbsoluteConstraints(1177, 208, 100, 40));
 
         txt_Search.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +237,7 @@ public class formKhachHang extends javax.swing.JPanel {
                 txt_SearchKeyPressed(evt);
             }
         });
+        add(txt_Search, new org.netbeans.lib.awtextra.AbsoluteConstraints(907, 164, 368, 30));
 
         btn_Tim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Anh/search.png"))); // NOI18N
         btn_Tim.addActionListener(new java.awt.event.ActionListener() {
@@ -216,16 +245,19 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_TimActionPerformed(evt);
             }
         });
+        add(btn_Tim, new org.netbeans.lib.awtextra.AbsoluteConstraints(1293, 164, 40, 30));
 
         buttonGroup1.add(rdo_Nu);
         rdo_Nu.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         rdo_Nu.setForeground(new java.awt.Color(153, 0, 0));
         rdo_Nu.setText("Nữ");
+        add(rdo_Nu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1116, 118, 120, 40));
 
         buttonGroup1.add(rdo_Nam);
         rdo_Nam.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         rdo_Nam.setForeground(new java.awt.Color(153, 0, 0));
         rdo_Nam.setText("Nam");
+        add(rdo_Nam, new org.netbeans.lib.awtextra.AbsoluteConstraints(907, 118, 120, 40));
 
         btn_LamMoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Anh/reset_1.png"))); // NOI18N
         btn_LamMoi.addActionListener(new java.awt.event.ActionListener() {
@@ -233,6 +265,8 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_LamMoiActionPerformed(evt);
             }
         });
+        add(btn_LamMoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1295, 208, 38, 40));
+        add(nb_key, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 212, 70, 30));
 
         btn_Encrypt.setText("Mã hóa");
         btn_Encrypt.addActionListener(new java.awt.event.ActionListener() {
@@ -240,6 +274,7 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_EncryptActionPerformed(evt);
             }
         });
+        add(btn_Encrypt, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 100, 34));
 
         btn_Decrypt.setText("Giải mã");
         btn_Decrypt.addActionListener(new java.awt.event.ActionListener() {
@@ -247,119 +282,20 @@ public class formKhachHang extends javax.swing.JPanel {
                 btn_DecryptActionPerformed(evt);
             }
         });
+        add(btn_Decrypt, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, 100, 34));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(570, 570, 570)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(138, 138, 138)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txt_TenKhachHang, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_CMND, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
-                                .addComponent(txt_MaKhachHang, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(55, 55, 55)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(rdo_Nam, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(89, 89, 89)
-                        .addComponent(rdo_Nu, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(txt_Search)
-                            .addGap(18, 18, 18)
-                            .addComponent(btn_Tim, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btn_Them, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_Encrypt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(27, 27, 27)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btn_Xoa, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                .addComponent(btn_Decrypt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(43, 43, 43)
-                            .addComponent(btn_Sua, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(btn_LamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(txt_SoDT, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(94, 94, 94))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addComponent(jLabel1)
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_MaKhachHang, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_SoDT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(rdo_Nam, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rdo_Nu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel4))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txt_TenKhachHang, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txt_CMND, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btn_Tim, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel9)
-                                        .addComponent(txt_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_LamMoi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Them, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Sua, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Decrypt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Encrypt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(153, 0, 0));
+        jLabel7.setText("Số CMND:");
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 170, 93, -1));
+
+        btnGroup.add(rdo_GiaoDien);
+        rdo_GiaoDien.setLabel("Mã hóa trên giao diện");
+        add(rdo_GiaoDien, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, -1, -1));
+
+        btnGroup.add(rdo_Ham);
+        rdo_Ham.setLabel("Mã hóa dùng hàm");
+        add(rdo_Ham, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 220, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbl_KhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_KhachHangMouseClicked
@@ -544,14 +480,66 @@ public class formKhachHang extends javax.swing.JPanel {
     private void btn_EncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EncryptActionPerformed
         // TODO add your handling code here:
         if (!btn_Encrypt.isEnabled()) {
-            return;
+        return;
+    }
+
+    // Kiểm tra RadioButton
+    if (rdo_Ham.isSelected()) {
+        try (Connection conn = Connect.getConnection()) { // Sử dụng phương thức kết nối chuẩn hóa
+            String sql = "{? = call encryptCaesarCipher(?, ?)}";
+            CallableStatement stmt = conn.prepareCall(sql);
+
+            // Đặt các tham số đầu vào và đầu ra
+            stmt.registerOutParameter(1, java.sql.Types.VARCHAR); // Kết quả trả về
+            stmt.setString(2, txt_SoDT.getText()); // Giá trị cần mã hóa (Số điện thoại)
+
+            // Lấy giá trị từ JSpinner nb_key
+            int k = (Integer) nb_key.getValue(); // Chuyển giá trị của nb_key thành int
+
+            // Đặt tham số k vào câu lệnh SQL
+            stmt.setInt(3, k); // Sử dụng giá trị từ JSpinner làm tham số k
+
+            // Thực hiện lệnh
+            stmt.execute();
+
+            // Lấy kết quả
+            String encryptedSDT = stmt.getString(1);
+
+            // Hiển thị kết quả mã hóa
+            JOptionPane.showMessageDialog(this, "Mã hóa bằng Oracle thành công: " + encryptedSDT);
+
+            // Lưu encryptedSDT vào cơ sở dữ liệu
+            String insertSQL = "UPDATE KhachHang SET SDT = ? WHERE MAKH = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+                pstmt.setString(1, encryptedSDT); // Giá trị mã hóa
+                pstmt.setInt(2, Integer.parseInt(txt_MaKhachHang.getText()));
+
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "Lưu mã hóa xuống cơ sở dữ liệu thành công!");
+                    hienThi();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng với số điện thoại này để cập nhật.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi mã hóa bằng Oracle: " + e.getMessage());
         }
+        return;
+    }
+
+    if (rdo_GiaoDien.isSelected()) {
+        // Thực hiện công việc mã hóa khi chọn rdo_GiaoDien
         KhachHang kh = new KhachHang();
+        
         int maKH = Integer.parseInt(txt_MaKhachHang.getText());
         kh.setMaKH(maKH);
         kh.setSoCMND(txt_CMND.getText());
         kh.setTenKH(txt_TenKhachHang.getText());
         kh.setSDT(txt_SoDT.getText());
+
+        // Kiểm tra giới tính
         if (rdo_Nam.isSelected()) {
             kh.setGioiTinh("Nam");
         } else if (rdo_Nu.isSelected()) {
@@ -561,30 +549,80 @@ public class formKhachHang extends javax.swing.JPanel {
             return;
         }
 
-        // Khởi tạo thông tin sách từ các trường dữ liệu trên giao diện
-        // Gọi phương thức thêm sách từ lớp SachDAO
+        // Gọi phương thức mã hóa từ KhachHangDao
         boolean success = KhachHangDao.maHoaKhachHang(kh);
         if (success) {
             // Thông báo thành công
             JOptionPane.showMessageDialog(this, "Mã hóa SDT khách hàng thành công!");
-            // Cập nhật lại danh sách sách trên giao diện
-            hienThi();
+            hienThi(); // Cập nhật giao diện
             btn_Encrypt.setEnabled(false);
             btn_Decrypt.setEnabled(true);
         } else {
             // Thông báo thất bại
             JOptionPane.showMessageDialog(this, "Mã hóa SDT khách hàng thất bại!");
         }
+    } else {
+        // Nếu không chọn radio nào
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn một tùy chọn!");
+    }
     }//GEN-LAST:event_btn_EncryptActionPerformed
 
     private void btn_DecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DecryptActionPerformed
         // TODO add your handling code here:
+        if (!btn_Decrypt.isEnabled()) {
+        return;
+    }
+
+    // Nếu RadioButton rdo_Ham được chọn
+    if (rdo_Ham.isSelected()) {
+        try (Connection conn = Connect.getConnection()) { // Kết nối cơ sở dữ liệu
+            String sql = "{? = call decryptCaesarCipher(?, ?)}"; // Gọi hàm decrypt từ Oracle
+            CallableStatement stmt = conn.prepareCall(sql);
+
+            // Đặt các tham số đầu vào và đầu ra
+            stmt.registerOutParameter(1, java.sql.Types.VARCHAR); // Kết quả trả về
+            stmt.setString(2, txt_SoDT.getText()); // Giá trị cần giải mã (Số điện thoại mã hóa)
+            int k = (Integer) nb_key.getValue(); // Lấy giá trị từ JSpinner
+            stmt.setInt(3, k); // Tham số k (độ dịch ngược)
+
+            // Thực thi câu lệnh
+            stmt.execute();
+
+            // Lấy kết quả giải mã
+            String decryptedSDT = stmt.getString(1);
+
+            // Cập nhật cơ sở dữ liệu với số điện thoại đã giải mã
+            String updateSQL = "UPDATE KhachHang SET SDT = ? WHERE MAKH = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+                pstmt.setString(1, decryptedSDT); // Giá trị sau khi giải mã
+                pstmt.setInt(2, Integer.parseInt(txt_MaKhachHang.getText())); // MAKH từ ô nhập liệu
+
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "Giải mã và lưu số điện thoại xuống cơ sở dữ liệu thành công: " + decryptedSDT);
+                    hienThi();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng với MAKH này để cập nhật.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi giải mã bằng Oracle: " + e.getMessage());
+        }
+        return;
+    }
+
+    // Nếu RadioButton rdo_GiaoDien được chọn
+    if (rdo_GiaoDien.isSelected()) {
+        // Khởi tạo đối tượng KhachHang
         KhachHang kh = new KhachHang();
         int maKH = Integer.parseInt(txt_MaKhachHang.getText());
         kh.setMaKH(maKH);
         kh.setSoCMND(txt_CMND.getText());
         kh.setTenKH(txt_TenKhachHang.getText());
         kh.setSDT(txt_SoDT.getText());
+
+        // Kiểm tra giới tính
         if (rdo_Nam.isSelected()) {
             kh.setGioiTinh("Nam");
         } else if (rdo_Nu.isSelected()) {
@@ -594,13 +632,12 @@ public class formKhachHang extends javax.swing.JPanel {
             return;
         }
 
-        // Khởi tạo thông tin sách từ các trường dữ liệu trên giao diện
-        // Gọi phương thức thêm sách từ lớp SachDAO
+        // Gọi phương thức giải mã từ KhachHangDao
         boolean success = KhachHangDao.giaiMaKhachHang(kh);
         if (success) {
             // Thông báo thành công
             JOptionPane.showMessageDialog(this, "Giải mã SDT khách hàng thành công!");
-            // Cập nhật lại danh sách sách trên giao diện
+            // Cập nhật lại danh sách
             hienThi();
             btn_Decrypt.setEnabled(false);
             btn_Encrypt.setEnabled(true);
@@ -608,10 +645,15 @@ public class formKhachHang extends javax.swing.JPanel {
             // Thông báo thất bại
             JOptionPane.showMessageDialog(this, "Giải mã SDT khách hàng thất bại!");
         }
+    } else {
+        // Nếu không chọn radio nào
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn một tùy chọn!");
+    }
     }//GEN-LAST:event_btn_DecryptActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btnGroup;
     private javax.swing.JButton btn_Decrypt;
     private javax.swing.JButton btn_Encrypt;
     private javax.swing.JButton btn_LamMoi;
@@ -620,14 +662,20 @@ public class formKhachHang extends javax.swing.JPanel {
     public javax.swing.JButton btn_Tim;
     public javax.swing.JButton btn_Xoa;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner nb_key;
+    private javax.swing.JRadioButton rdo_GiaoDien;
+    private javax.swing.JRadioButton rdo_Ham;
     public javax.swing.JRadioButton rdo_Nam;
     public javax.swing.JRadioButton rdo_Nu;
     public javax.swing.JTable tbl_KhachHang;

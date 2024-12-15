@@ -103,7 +103,6 @@ public class KetNoiDataBase extends javax.swing.JFrame {
         String database;
         database=txt_Database.getText();
         Connect.database=database;
-        //DangKy temp= new DangKy();
         DangNhap temp = new DangNhap(new FrmTong());
         temp.setVisible(true);
         this.setVisible(false);
