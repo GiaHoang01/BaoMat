@@ -103,9 +103,23 @@ public class NhanVienDao {
             } else {
                 sex = "Nữ";
             }
+               String ngaySinhText = Goc.txt_NgaySinh.getText();
+            Date ngaySinh = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Định dạng ngày tháng từ giao diện
+
+            try {
+                ngaySinh = sdf.parse(ngaySinhText);  // Chuyển đổi chuỗi thành đối tượng Date
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ. Vui lòng nhập lại (DD/MM/YYYY).");
+                return;  // Dừng lại nếu ngày sinh không hợp lệ
+            }
+
+            // Chuyển đổi thành java.sql.Date từ java.util.Date
+            java.sql.Date sqlNgaySinh = new java.sql.Date(ngaySinh.getTime());
+
             preparedStatement.setString(4, sex);
             preparedStatement.setString(5, temp.txt_TenDangNhap.getText().toString());
-            preparedStatement.setString(6, temp.txt_NgaySinh.getText().toString());
+            preparedStatement.setDate(6, sqlNgaySinh);
             preparedStatement.setString(7, fileName);
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
@@ -165,24 +179,24 @@ public class NhanVienDao {
             if (imagePath != null) {
                 fileName = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
             }
- String ngaySinhText = Goc.txt_NgaySinh.getText();
-        Date ngaySinh = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Định dạng ngày tháng từ giao diện
+            String ngaySinhText = Goc.txt_NgaySinh.getText();
+            Date ngaySinh = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Định dạng ngày tháng từ giao diện
 
-        try {
-            ngaySinh = sdf.parse(ngaySinhText);  // Chuyển đổi chuỗi thành đối tượng Date
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ. Vui lòng nhập lại (DD/MM/YYYY).");
-            return;  // Dừng lại nếu ngày sinh không hợp lệ
-        }
+            try {
+                ngaySinh = sdf.parse(ngaySinhText);  // Chuyển đổi chuỗi thành đối tượng Date
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ. Vui lòng nhập lại (DD/MM/YYYY).");
+                return;  // Dừng lại nếu ngày sinh không hợp lệ
+            }
 
-        // Chuyển đổi thành java.sql.Date từ java.util.Date
-        java.sql.Date sqlNgaySinh = new java.sql.Date(ngaySinh.getTime());
+            // Chuyển đổi thành java.sql.Date từ java.util.Date
+            java.sql.Date sqlNgaySinh = new java.sql.Date(ngaySinh.getTime());
 
             // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
-                    PreparedStatement preparedStatement = Connect.conn.prepareStatement(
-                            "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
-                    );
+            PreparedStatement preparedStatement = Connect.conn.prepareStatement(
+                    "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
+            );
             preparedStatement.setString(1, Goc.txt_TenNhanVien.getText());
             preparedStatement.setString(2, Goc.txt_ChucVu.getText());
             preparedStatement.setString(3, Goc.txt_SoDT.getText());
@@ -221,6 +235,19 @@ public class NhanVienDao {
             PrivateKey privateKey = keyPair.getPrivate();
             String encryptedPhone = EncryptionHelperDao.encryptRSA(Goc.txt_SoDT.getText(), publicKey);
             // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
+            String ngaySinhText = Goc.txt_NgaySinh.getText();
+            Date ngaySinh = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Định dạng ngày tháng từ giao diện
+
+            try {
+                ngaySinh = sdf.parse(ngaySinhText);  // Chuyển đổi chuỗi thành đối tượng Date
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ. Vui lòng nhập lại (DD/MM/YYYY).");
+                return;  // Dừng lại nếu ngày sinh không hợp lệ
+            }
+
+            // Chuyển đổi thành java.sql.Date từ java.util.Date
+            java.sql.Date sqlNgaySinh = new java.sql.Date(ngaySinh.getTime());
 
             PreparedStatement preparedStatement = Connect.conn.prepareStatement(
                     "UPDATE Admin.NhanVien SET TenNV=?, ChucVu=?, SDT=?, GioiTinh=?, TenDangNhap=?, NgaySinh=?, HinhAnh=? WHERE MaNV=?"
@@ -232,7 +259,7 @@ public class NhanVienDao {
             String sex = Goc.rdo_Nam.isSelected() ? "Nam" : "Nữ";
             preparedStatement.setString(4, sex);
             preparedStatement.setString(5, Goc.txt_TenDangNhap.getText());
-            preparedStatement.setString(6, Goc.txt_NgaySinh.getText());
+            preparedStatement.setDate(6, sqlNgaySinh);
             preparedStatement.setString(7, fileName); // Đặt tên tệp hình ảnh vào đây
             preparedStatement.setString(8, Goc.txt_MaNhanVien.getText());
 
@@ -258,6 +285,19 @@ public class NhanVienDao {
             if (imagePath != null) {
                 fileName = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
             }
+            String ngaySinhText = Goc.txt_NgaySinh.getText();
+            Date ngaySinh = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Định dạng ngày tháng từ giao diện
+
+            try {
+                ngaySinh = sdf.parse(ngaySinhText);  // Chuyển đổi chuỗi thành đối tượng Date
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ. Vui lòng nhập lại (DD/MM/YYYY).");
+                return;  // Dừng lại nếu ngày sinh không hợp lệ
+            }
+
+            // Chuyển đổi thành java.sql.Date từ java.util.Date
+            java.sql.Date sqlNgaySinh = new java.sql.Date(ngaySinh.getTime());
 
             // Chuẩn bị câu lệnh SQL với cả cột HinhAnh
             PreparedStatement preparedStatement = Connect.conn.prepareStatement(
@@ -270,7 +310,7 @@ public class NhanVienDao {
             String sex = Goc.rdo_Nam.isSelected() ? "Nam" : "Nữ";
             preparedStatement.setString(4, sex);
             preparedStatement.setString(5, Goc.txt_TenDangNhap.getText());
-            preparedStatement.setString(6, Goc.txt_NgaySinh.getText());
+            preparedStatement.setDate(6, sqlNgaySinh);
             preparedStatement.setString(7, fileName); // Đặt tên tệp hình ảnh vào đây
             preparedStatement.setString(8, Goc.txt_MaNhanVien.getText());
 
