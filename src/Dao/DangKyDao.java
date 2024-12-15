@@ -6,20 +6,39 @@ package Dao;
 
 import Pojo.Connect;
 import Gui.FrmTong;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author 84862
  */
 public class DangKyDao {
-   public boolean ketNoiDangKyCapQuyen(String tenTaiKhoan, String matKhau) 
-   {
-       
+
+    private static PublicKey publicKey;
+    private static PrivateKey privateKey;
+
+    static {
+        try {
+            // Tạo cặp khóa RSA khi khởi tạo class (khởi tạo một lần)
+            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
+            publicKey = keyPair.getPublic();
+            privateKey = keyPair.getPrivate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean ketNoiDangKyCapQuyen(String tenTaiKhoan, String matKhau) {
+
         Statement stmt = null;
         try {
             // Kết nối đến cơ sở dữ liệu
@@ -27,12 +46,16 @@ public class DangKyDao {
 
             // Tắt auto-commit
             Connect.conn.setAutoCommit(false);
+            try {
+                String mahoamk = EncryptionHelperDao.encryptRSA(matKhau, publicKey);
+                String insertTaiKhoanSQL = "INSERT INTO Admin.TaiKhoan (TenDangNhap, MatKhau) VALUES ('" + tenTaiKhoan + "', '" + mahoamk + "')";
+                stmt = Connect.conn.createStatement();
+                stmt.executeUpdate(insertTaiKhoanSQL);
 
+            } catch (Exception ex) {
+                Logger.getLogger(DangKyDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
             // Thực hiện lệnh SQL để thêm tài khoản mới vào bảng TaiKhoan
-            String insertTaiKhoanSQL = "INSERT INTO Admin.TaiKhoan (TenDangNhap, MatKhau) VALUES ('" + tenTaiKhoan + "', '" + matKhau + "')";
-            stmt = Connect.conn.createStatement();
-            stmt.executeUpdate(insertTaiKhoanSQL);
-
 //            // Thực hiện lệnh SQL để tạo người dùng mới trong cơ sở dữ liệu
             String createUserSQL = "CREATE USER " + tenTaiKhoan + " IDENTIFIED BY " + matKhau;
             stmt.executeUpdate(createUserSQL);
@@ -40,19 +63,19 @@ public class DangKyDao {
             // Cấp quyền cho người dùng mới
             String grantSQL = "GRANT nhanvien TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL);
-           
+
             String grantSQL1 = "GRANT UNLIMITED TABLESPACE TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL1);
-             
+
             String grantSQL2 = "GRANT REFERENCES(MaKH) ON Admin.KhachHang TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL2);
-            
+
             String grantSQL3 = "GRANT REFERENCES(MaNV) ON Admin.NhanVien TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL3);
-            
+
             String grantSQL4 = "GRANT ALTER SYSTEM TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL4);
-            
+
             String grantSQL5 = "GRANT SELECT ON v_$session TO " + tenTaiKhoan;
             stmt.executeUpdate(grantSQL5);
             // Commit giao dịch

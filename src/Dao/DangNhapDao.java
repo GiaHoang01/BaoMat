@@ -7,6 +7,9 @@ package Dao;
 import Pojo.Connect;
 import Gui.FrmTong;
 import java.awt.Component;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
@@ -16,6 +19,19 @@ import javax.swing.JOptionPane;
  * @author 84862
  */
 public class DangNhapDao {
+    private static PublicKey publicKey;
+    private static PrivateKey privateKey;
+
+    static {
+        try {
+            // Tạo cặp khóa RSA khi khởi tạo class (khởi tạo một lần)
+            KeyPair keyPair = EncryptionHelperDao.generateRSAKeyPair();
+            publicKey = keyPair.getPublic();
+            privateKey = keyPair.getPrivate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void quyen(String tenDangNhap,FrmTong temp)
     {
         if(tenDangNhap.equals("Admin"))
